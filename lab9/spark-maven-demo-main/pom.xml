@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <!-- == podstawowe metadane == -->
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>agh.wggios.analizadanych</groupId>
+  <artifactId>transformer</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <!-- == właściwości projektu == -->
+  <properties>
+    <scala.version>2.12.18</scala.version>          <!-- Spark 3.5.x -->
+    <spark.version>3.5.1</spark.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <!-- == zależności == -->
+  <dependencies>
+
+    <!-- biblioteki Spark tylko jako 'provided' -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-sql_2.12</artifactId>
+      <version>${spark.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-mllib_2.12</artifactId>
+      <version>${spark.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Twoje biblioteki runtime -->
+    <dependency>
+      <groupId>io.delta</groupId>
+      <artifactId>delta-core_2.12</artifactId>
+      <version>1.2.1</version>     <!-- zamiast 3.2.0 -->
+    </dependency>
+
+
+    <!-- testy -->
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest_2.12</artifactId>
+      <version>3.2.17</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>delta-io</id>
+      <url>https://repo.delta.io/releases</url>
+    </repository>
+  </repositories>
+
+  <!-- == pluginy builda == -->
+  <build>
+    <sourceDirectory>src/main/scala</sourceDirectory>
+    <testSourceDirectory>src/test/scala</testSourceDirectory>
+
+    <plugins>
+
+      <!-- kompilacja kodu Scala -->
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>4.8.0</version>
+        <configuration>
+          <scalaVersion>${scala.version}</scalaVersion>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- fat-JAR z zależnościami -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <archive>
+            <manifest>
+              <mainClass>agh.wggios.analizadanych.Main</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals><goal>single</goal></goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>
