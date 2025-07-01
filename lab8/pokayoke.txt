@@ -1,0 +1,21 @@
+
+1. Konfiguracja & sekrety poza kodem
+  - Azure App Configuration (progi, ﬂagi)
+  - Azure Key Vault + Managed Identity (hasła, tokeny)
+
+2. Walidacja + drift
+  - Schema Registry → DLQ dla błędnych rekordów
+  - Azure ML / Databricks – monitoring data-, schema-, concept-drift
+
+3. NULL-safe transformacje
+  - ASA WHERE temp IS NOT NULL
+  - Spark df.na.drop()/fill() + kolumna `_corrupt`
+
+4. Pełna parametryzacja
+  - Databricks dbutils.widgets
+  - Functions / ADF – zmienne środowiskowe & parametry szablonu
+
+5. Wbudowane handlery
+  - Spark checkpoint + mergeSchema + Delta Lake MERGE
+  - ASA errorSettings (outputErrorPolicy=drop)
+  - Functions heartbeat + auto-restart (Logic Apps)
